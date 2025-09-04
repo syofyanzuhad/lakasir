@@ -13,6 +13,7 @@ use App\Models\Tenants\Setting;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
@@ -176,5 +177,28 @@ trait HasProductForm
             ->rule('after:now')
             ->required()
             ->native(false);
+    }
+
+    public function generateAdditionalBarcodesFormComponent(): Repeater
+    {
+        return Repeater::make('additionalBarcodes')
+            ->translateLabel()
+            ->relationship('additionalBarcodes')
+            ->schema([
+                TextInput::make('additional_barcode')
+                    ->translateLabel()
+                    ->helperText(__('Point the cursor to this input first then scan the barcode'))
+                    ->required()
+                    ->unique('product_additional_barcodes', 'additional_barcode', ignoreRecord: true)
+                    ->placeholder(__('Enter additional barcode')),
+            ])
+            ->columnSpanFull()
+            ->addActionLabel(__('Add Additional Barcode'))
+            ->reorderable(false)
+            ->collapsible()
+            ->cloneable()
+            ->deleteAction(
+                fn ($action) => $action->requiresConfirmation()
+            );
     }
 }

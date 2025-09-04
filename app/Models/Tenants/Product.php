@@ -211,4 +211,15 @@ class Product extends Model
     {
         return $this->hasMany(PriceUnit::class);
     }
+
+    public function additionalBarcodes(): HasMany
+    {
+        return $this->hasMany(ProductAdditionalBarcode::class);
+    }
+
+    public function activeBarcodes(): HasMany
+    {
+        return $this->hasMany(ProductAdditionalBarcode::class)
+            ->where('is_deleted', false);
+    }
 }

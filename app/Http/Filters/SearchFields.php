@@ -26,6 +26,13 @@ class SearchFields implements Filter
                     $query->orWhere($field, 'LIKE', "%$value%");
                 }
             }
+            
+            // Also search in additional barcodes when barcode field is included
+            if (in_array('barcode', $fields)) {
+                $query->orWhereHas('activeBarcodes', function($query) use ($value) {
+                    $query->where('additional_barcode', 'LIKE', "%$value%");
+                });
+            }
         });
 
         return $query;

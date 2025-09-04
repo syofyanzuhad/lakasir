@@ -42,7 +42,7 @@ class ProductResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'sku', 'barcode'];
+        return ['name', 'sku', 'barcode', 'activeBarcodes.additional_barcode'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -74,7 +74,7 @@ class ProductResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->translateLabel()
-                    ->searchable(['sku', 'name', 'barcode']),
+                    ->searchable(['sku', 'name', 'barcode', 'activeBarcodes.additional_barcode']),
                 TextColumn::make('sku')
                     ->searchable()
                     ->toggleable()
@@ -116,7 +116,7 @@ class ProductResource extends Resource
                     ->visible(Feature::active(ProductStock::class))
                     ->translateLabel(),
             ])
-            ->searchPlaceholder(__('Search (SKU, name, barcode)'))
+            ->searchPlaceholder(__('Search (SKU, name, barcode, additional barcodes)'))
             ->filters([
                 Filter::make('expired')
                     ->toggle()
@@ -174,6 +174,7 @@ class ProductResource extends Resource
                 ->columnSpan(1),
             $this->generateBarcodeFormComponent(),
             $this->generateSkuFormComponent(),
+            $this->generateAdditionalBarcodesFormComponent(),
             $this->generateCategoryFormComponent(),
             $this->generateStockFormComponent(),
             $this->generateUnitFormComponent(),
@@ -203,6 +204,13 @@ class ProductResource extends Resource
                 ->translateLabel(),
             Infolists\Components\TextEntry::make('barcode')
                 ->translateLabel(),
+            Infolists\Components\TextEntry::make('activeBarcodes.additional_barcode')
+                ->label(__('Additional Barcodes'))
+                ->badge()
+                ->color('gray')
+                ->listWithLineBreaks()
+                ->limitList(3)
+                ->expandableLimitedList(),
 //            Infolists\Components\TextEntry::make('stocks_sum_stock')
 //                                    ->sum('stocks', 'stock')
 //                                    ->label("stocks")

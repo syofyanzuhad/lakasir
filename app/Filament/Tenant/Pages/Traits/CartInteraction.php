@@ -144,6 +144,9 @@ trait CartInteraction
     {
         $product = Product::whereBarcode($value)
             ->orWhere('sku', $value)
+            ->orWhereHas('activeBarcodes', function ($query) use ($value) {
+                $query->where('additional_barcode', $value);
+            })
             ->first();
 
         if (! $product) {
