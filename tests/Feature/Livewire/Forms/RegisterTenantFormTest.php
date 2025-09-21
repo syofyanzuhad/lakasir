@@ -15,7 +15,10 @@ uses(RefreshDatabase::class);
 describe('Register Test', function () {
     beforeEach(function () {
         config(['tenancy.central_domains' => ['localhost.com']]);
-        DB::statement('DROP DATABASE IF EXISTS lakasir_tokotestweb');
+        // Only try to drop database if using MySQL - use the actual database name from RegisterTenant
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("DROP DATABASE IF EXISTS `lakasir_tokotestweb`");
+        }
     });
     it('user can see the register page', function () {
         get('/auth/register')
@@ -59,5 +62,8 @@ describe('Register Test', function () {
     });
 })->skip('not implemented yet');
 afterAll(function () {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotestweb');
+    // Only try to drop database if using MySQL - use the actual database name from RegisterTenant
+    if (DB::getDriverName() === 'mysql') {
+        DB::statement("DROP DATABASE IF EXISTS `lakasir_tokotestweb`");
+    }
 });

@@ -13,7 +13,10 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     config(['tenancy.central_domains' => ['localhost.com']]);
-    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
+    // Only try to drop database if using MySQL - use the actual database name from RegisterTenant
+    if (DB::getDriverName() === 'mysql') {
+        DB::statement("DROP DATABASE IF EXISTS `lakasir_tokotest`");
+    }
 });
 it('user can create the tenant account', function () {
     Notification::fake();
@@ -91,5 +94,8 @@ test('user can not create the tenant when the other business type null if busine
 });
 
 afterAll(function () {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_tokotest');
+    // Only try to drop database if using MySQL - use the actual database name from RegisterTenant
+    if (DB::getDriverName() === 'mysql') {
+        DB::statement("DROP DATABASE IF EXISTS `lakasir_tokotest`");
+    }
 });

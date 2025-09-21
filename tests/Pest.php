@@ -48,8 +48,39 @@ expect()->extend('toBeOne', function () {
 
 function mockTenant(): Tenant
 {
-    DB::statement('DROP DATABASE IF EXISTS lakasir_toko_testing');
-    Tenant::where('id', 'toko_testing')->delete();
+    // Clean up any existing tenant with the same ID
+    $existingTenant = Tenant::find('toko_testing');
+    if ($existingTenant) {
+        // Delete the tenant (this should also clean up tenant-specific data)
+        try {
+            $existingTenant->delete();
+        } catch (Exception $e) {
+            // Ignore errors during cleanup
+        }
+    }
+    
+    // For MySQL, we still need to clean up the database
+    if (DB::getDriverName() === 'mysql') {
+        $dbName = 'lakasir_toko_testing';
+        try {
+            DB::statement("DROP DATABASE IF EXISTS `{$dbName}`");
+        } catch (Exception $e) {
+            // Ignore if database doesn't exist
+        }
+    }
+    
+    // For SQLite in testing, clean up tenant database files
+    if (DB::getDriverName() === 'sqlite') {
+        $dbPath = database_path('tenant_toko_testing.sqlite');
+        if (file_exists($dbPath)) {
+            try {
+                unlink($dbPath);
+            } catch (Exception $e) {
+                // Ignore if file can't be deleted
+            }
+        }
+    }
+    
     $data = [
         'name' => 'toko_testing',
         'domain' => 'toko_testing.'.config('tenancy.central_domains')[0],
