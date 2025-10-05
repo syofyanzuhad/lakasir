@@ -2,9 +2,6 @@
 nixPkgs = ["python311Packages.supervisor"]
 aptPkgs = ["nodejs", "npm", "yarn"]
 
-[providers.php]
-[providers.node]
-
 [phases.build]
 cmds = [
     "mkdir -p /etc/supervisor/conf.d/",
