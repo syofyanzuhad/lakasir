@@ -1,3 +1,6 @@
+[variables]
+NIXPACKS_PHP_VERSION = "8.3"
+
 [phases.setup]
 nixPkgs = [
     "...",
