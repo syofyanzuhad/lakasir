@@ -9,15 +9,18 @@ nixPkgs = [
 nixpkgsArchive = "e24b4c09e963677b1beea49d411cd315a024ad3a"
 
 [phases.install]
-cmds = ["npm ci"]
+cmds = [
+    "composer install --ignore-platform-reqs",
+    "npm ci"
+]
 
 [phases.build]
 cmds = [
+    "npm run build",
     "mkdir -p /etc/supervisor/conf.d/",
     "cp /assets/worker-*.conf /etc/supervisor/conf.d/",
     "cp /assets/supervisord.conf /etc/supervisord.conf",
-    "chmod +x /assets/start.sh",
-    "npm run build"
+    "chmod +x /assets/start.sh"
 ]
 
 [start]
