@@ -1,6 +1,9 @@
 [phases.setup]
-nixPkgs = ["..."]
-aptPkgs = ["supervisor"]
+nixPkgs = [
+    "...",
+    "(lib.hiPrio yarn)",
+    "python311Packages.supervisor"
+]
 
 [phases.build]
 cmds = [
