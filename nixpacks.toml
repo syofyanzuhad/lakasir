@@ -1,12 +1,12 @@
-[variables]
-NIXPACKS_PHP_VERSION = "8.3"
-
 [phases.setup]
 nixPkgs = [
-    "...",
-    "(lib.recursiveUpdate php83Packages.composer { meta.priority = php83Packages.composer.meta.priority or 0 - 1; })",
+    "php83",
+    "php83Packages.composer",
+    "nodejs_20",
+    "yarn",
     "python311Packages.supervisor"
 ]
+nixpkgsArchive = "e24b4c09e963677b1beea49d411cd315a024ad3a"
 
 [phases.build]
 cmds = [
