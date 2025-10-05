@@ -1,8 +1,7 @@
 [phases.setup]
 nixPkgs = [
     "...",
-    "(lib.setPrio 10 yarn)",
-    "(lib.setPrio 5 php83Packages.composer)",
+    "(symlinkJoin { name = \"yarn-prioritized\"; paths = [ yarn ]; postBuild = ''rm -f $out/LICENSE''; })",
     "python311Packages.supervisor"
 ]
 
