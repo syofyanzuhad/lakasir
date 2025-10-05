@@ -1,15 +1,6 @@
 [phases.setup]
 nixPkgs = ["...", "python311Packages.supervisor"]
-nixpkgsArchive = "e24b4c09e963677b1beea49d411cd315a024ad3a"
-
-[phases.setup.nixOverlays]
-"overlay.nix" = '''
-self: super: {
-  buildEnv = args: super.buildEnv (args // {
-    ignoreCollisions = true;
-  });
-}
-'''
+nixLib = ["(pkgs.buildEnv { name = \"env\"; paths = with pkgs; [ yarn composer ]; ignoreCollisions = true; })"]
 
 [phases.build]
 cmds = [
