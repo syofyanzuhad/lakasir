@@ -1,7 +1,7 @@
 [phases.setup]
 nixPkgs = [
     "...",
-    "(lib.lowPrio php81Packages.composer)",
+    "(lib.lowPrio php83Packages.composer)",
     "python311Packages.supervisor"
 ]
 
