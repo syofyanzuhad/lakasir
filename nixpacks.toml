@@ -1,9 +1,9 @@
 [phases.setup]
-nixPkgs = [
-    "...",
-    "(symlinkJoin { name = \"yarn-prioritized\"; paths = [ yarn ]; postBuild = ''rm -f $out/LICENSE''; })",
-    "python311Packages.supervisor"
-]
+nixPkgs = ["python311Packages.supervisor"]
+aptPkgs = ["nodejs", "npm", "yarn"]
+
+[providers.php]
+[providers.node]
 
 [phases.build]
 cmds = [
