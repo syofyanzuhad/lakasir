@@ -1,7 +1,6 @@
 [phases.setup]
 nixPkgs = [
     "php83",
-    "php83Extensions.fpm",
     "php83Packages.composer",
     "nginx",
     "nodejs_20",
@@ -76,7 +75,7 @@ stderr_logfile=/var/log/worker-nginx.log
 "worker-phpfpm.conf" = '''
 [program:worker-phpfpm]
 process_name=%(program_name)s_%(process_num)02d
-command=php-fpm -y /assets/php-fpm.conf -F
+command=bash -c 'exec $(which php-fpm || which php-fpm83) -y /assets/php-fpm.conf -F'
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/worker-phpfpm.log
