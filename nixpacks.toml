@@ -1,6 +1,8 @@
 [phases.setup]
 nixPkgs = ["...", "python311Packages.supervisor"]
-nixLib = ["(pkgs.buildEnv { name = \"env\"; paths = with pkgs; [ yarn composer ]; ignoreCollisions = true; })"]
+
+[variables]
+NIXPACKS_NO_YARN = "1"
 
 [phases.build]
 cmds = [
