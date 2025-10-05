@@ -4,7 +4,6 @@ nixPkgs = [
     "php83Packages.composer",
     "nginx",
     "nodejs_20",
-    "yarn",
     "python311Packages.supervisor"
 ]
 nixpkgsArchive = "e24b4c09e963677b1beea49d411cd315a024ad3a"
