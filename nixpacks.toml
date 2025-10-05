@@ -1,6 +1,9 @@
 [phases.setup]
-nixPkgs = ["python311Packages.supervisor"]
-aptPkgs = ["nodejs", "npm", "yarn"]
+nixPkgs = [
+    "...",
+    "(lib.recursiveUpdate php83Packages.composer { meta.priority = php83Packages.composer.meta.priority or 0 - 1; })",
+    "python311Packages.supervisor"
+]
 
 [phases.build]
 cmds = [
