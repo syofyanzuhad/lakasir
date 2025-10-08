@@ -1,1 +1,1 @@
-{{-- @laravelPWA --}}
+@laravelPWA
