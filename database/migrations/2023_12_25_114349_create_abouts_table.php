@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('abouts');
         Schema::create('abouts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(TenantUser::class);
