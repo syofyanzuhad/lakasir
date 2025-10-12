@@ -95,6 +95,24 @@ class POS extends Page
             });
     }
 
+    public function search(string $query): void
+    {
+        $this->menuItems = Product::query()
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('sku', 'like', "%{$query}%")
+                    ->orWhere('barcode', 'like', "%{$query}%");
+            })
+            ->limit(20)
+            ->get();
+
+        $this->dispatch('refreshPage', [
+            'cartItems' => $this->cartItems,
+            'categories' => $this->categories,
+            'menuItems' => $this->menuItems,
+        ]);
+    }
+
     public function scanProduct(string $barcode): void
     {
         $this->addCartUsingScanner($barcode);
