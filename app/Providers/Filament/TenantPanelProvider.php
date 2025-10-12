@@ -154,7 +154,14 @@ class TenantPanelProvider extends PanelProvider
                 CartItem::class,
             ])
             ->plugins([
-                FilamentLogViewer::make(),
+                // FilamentLogViewer::make()
+                // ->authorize(fn () => auth()->check())
+                // ->navigationGroup('System')
+                // ->navigationIcon('heroicon-o-document-text')
+                // ->navigationLabel('Log Viewer')
+                // ->navigationSort(10)
+                // ->navigationUrl('/logs')
+                // ->pollingTime(null), // Set to null to disable polling,
             ]);
 
         return $panel;
