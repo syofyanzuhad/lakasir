@@ -98,11 +98,17 @@ class POS extends Page
     public function search(string $query): void
     {
         $this->menuItems = Product::query()
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('sku', 'like', "%{$query}%")
-                    ->orWhere('barcode', 'like', "%{$query}%");
+            ->select('products.*')
+            ->leftJoin('barcodes', function ($join) {
+                $join->on('products.id', '=', 'barcodes.product_id')
+                    ->where('barcodes.is_active', true);
             })
+            ->where(function ($q) use ($query) {
+                $q->where('products.name', 'like', "%{$query}%")
+                    ->orWhere('products.sku', 'like', "%{$query}%")
+                    ->orWhere('barcodes.code', 'like', "%{$query}%");
+            })
+            ->groupBy('products.id')
             ->limit(20)
             ->get();
 
