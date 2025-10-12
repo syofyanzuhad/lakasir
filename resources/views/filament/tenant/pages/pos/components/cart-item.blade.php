@@ -130,10 +130,11 @@
       },
 
       continueToPayment() {
-        console.log('Proceeding to payment...');
-        console.log('Cart Total:', this.cartTotal);
-        console.log('Tax:', this.cartTotal * 0.1);
-        console.log('Final Total:', this.cartTotal * 1.1);
+        if (Object.keys(this.cart).length === 0) {
+          alert('Your cart is empty');
+          return;
+        }
+        Livewire.navigate('/member/cashier');
       }
     }
   })

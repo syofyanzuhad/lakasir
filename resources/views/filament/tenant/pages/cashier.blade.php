@@ -4,25 +4,25 @@
 
 @endphp
 <div class="">
-  <div class="grid grid-cols-3 gap-x-4">
-    <div class="col-span-2">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-x-4">
+    <div class="order-2 lg:order-1 lg:col-span-2">
       {{ $this->table }}
     </div>
-    <div class="fixed right-0 h-screen w-1/3 overflow-y-scroll pb-10">
-      <div class="mt-4 h-screen space-y-2 px-4">
+    <div class="order-1 lg:order-2 lg:col-span-1">
+      <div class="space-y-2 px-2 py-4 lg:px-4">
         <div class="flex items-center justify-between" x-data="fullscreen">
-          <p class="text-xl font-semibold">{{ __('Orders details') }}</p>
-          <div class="flex items-center">
-            <div class="hidden items-center gap-x-2 xl:flex">
+          <p class="text-lg font-semibold lg:text-xl">{{ __('Orders details') }}</p>
+          <div class="flex items-center gap-x-2">
+            <div class="flex items-center gap-x-2">
               <a href="/member/sellings"
-                class="flex items-center justify-center gap-x-1 rounded-lg bg-gray-100 px-4 py-1 text-gray-500">
+                class="flex items-center justify-center gap-x-1 rounded-lg bg-gray-100 px-3 py-2 text-gray-500 lg:px-4">
                 <x-heroicon-o-arrow-left class="h-4 w-4 text-gray-500" />
                 <p class="hidden lg:block">{{ __('Back') }} </p>
               </a>
 
               <button x-on:click="$dispatch('open-modal', {id: 'qr-scanner-modal'})" type="button"
                 class="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Scan with camera">
-                <x-heroicon-o-qr-code class="h-8 w-8 text-gray-900 dark:text-gray-300" />
+                <x-heroicon-o-qr-code class="h-6 w-6 text-gray-900 dark:text-gray-300 lg:h-8 lg:w-8" />
               </button>
 
             </div>
@@ -65,57 +65,57 @@
           <p class="">{{ Filament::auth()->user()->cashier_name }}</p>
         </div>
         <div class="flex items-center justify-between">
-          <p class="mb-2 hidden text-2xl font-semibold lg:block">{{ __('Current Orders') }}</p>
+          <p class="mb-2 text-lg font-semibold lg:text-2xl">{{ __('Current Orders') }}</p>
           <div class="flex gap-x-1"></div>
         </div>
-        <div class="max-h-[35%] min-h-40 overflow-auto overflow-y-scroll" wire:loading.class="opacity-20"
+        <div class="max-h-[300px] min-h-40 overflow-auto overflow-y-scroll lg:max-h-[35%]" wire:loading.class="opacity-20"
           wire:target="addCart,reduceCart,deleteCart,addDiscountPricePerItem,addCartUsingScanner">
           @forelse($cartItems as $item)
-            <div class="mb-2 rounded-lg border bg-white px-4 py-2 dark:border-gray-900 dark:bg-gray-900"
+            <div class="mb-2 rounded-lg border bg-white px-3 py-2 dark:border-gray-900 dark:bg-gray-900 lg:px-4"
               id="{{ $item->id }}" key="{{ rand() }}">
               <div class="grid items-center space-x-3">
                 <div class="flex justify-between">
-                  <p class="font-semibold"> {{ $item->product->name }}</p>
-                  <p class="font-semibold text-lakasir-primary">{{ $item->price_format_money }}</p>
+                  <p class="text-sm font-semibold lg:text-base"> {{ $item->product->name }}</p>
+                  <p class="text-sm font-semibold text-lakasir-primary lg:text-base">{{ $item->price_format_money }}</p>
                 </div>
               </div>
               <div class="grid grid-cols-2 items-center space-y-2 py-2 text-right">
                 <div class="col-span-2">
                   @feature(Discount::class)
                     <div class="mb-1 flex justify-end">
-                      <x-filament::input.wrapper class="w-1/2">
+                      <x-filament::input.wrapper class="w-full sm:w-1/2">
                         <x-filament::input type="text" id="{{ $item->product->name }}-{{ $item->id }}"
                           value="{{ $item->discount_price == 0 ? '' : $item->discount_price }}"
                           wire:keyup.debounce.500ms="addDiscountPricePerItem({{ $item }}, parseFloat($event.target.value.replace(/,/g, '')))"
-                          placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric"
+                          placeholder="{{ __('Discount') }}" class="w-full text-right sm:w-1/2" inputMode="numeric"
                           x-mask:dynamic="$money($input)" />
                       </x-filament::input.wrapper>
                     </div>
                   @endfeature
                   @if ($item->discount_price && $item->discount_price > 0)
-                    <p class="font-semibold text-lakasir-primary">{{ $item->final_price_format }}</p>
+                    <p class="text-sm font-semibold text-lakasir-primary lg:text-base">{{ $item->final_price_format }}</p>
                   @endif
                 </div>
               </div>
-              <div class="flex h-8 space-x-3">
-                <button class="rounded-lg !bg-lakasir-primary px-2 py-1"
+              <div class="flex h-10 space-x-2 lg:h-8 lg:space-x-3">
+                <button class="rounded-lg !bg-lakasir-primary px-3 py-2 lg:px-2 lg:py-1"
                   wire:click.stop="addCart( {{ $item->product_id }} )" wire:loading.attr="disabled">
-                  <x-heroicon-o-plus-small class="h-4 w-4 !text-white" />
+                  <x-heroicon-o-plus-small class="h-5 w-5 !text-white lg:h-4 lg:w-4" />
                 </button>
-                <x-filament::input.wrapper class="w-20" x-data="cart">
+                <x-filament::input.wrapper class="w-16 lg:w-20" x-data="cart">
                   <x-filament::input type="text"
                     id="{{ $item->product->name }}-{{ $item->id }}-qty-{{ rand() }}"
                     data-value="{{ $item->qty }}" value="{{ $item->qty }}"
                     x-on:keyup.debounce.500ms="(e) => add('{{ $item->product_id }}', e.target.value)"
-                    placeholder="{{ __('Discount') }}" class="w-1/2 text-right" inputMode="numeric" />
+                    placeholder="{{ __('Discount') }}" class="w-full text-right" inputMode="numeric" />
                 </x-filament::input.wrapper>
-                <button class="rounded-lg !bg-gray-100 px-2 py-1"
+                <button class="rounded-lg !bg-gray-100 px-3 py-2 lg:px-2 lg:py-1"
                   x-on:click="$wire.reduceCart({{ $item->product_id }});" wire:loading.attr="disabled">
-                  <x-heroicon-o-minus-small class="h-4 w-4 !text-green-900" />
+                  <x-heroicon-o-minus-small class="h-5 w-5 !text-green-900 lg:h-4 lg:w-4" />
                 </button>
-                <button class="rounded-lg !bg-danger-100 px-2 py-1" wire:click="deleteCart({{ $item->id }})"
+                <button class="rounded-lg !bg-danger-100 px-3 py-2 lg:px-2 lg:py-1" wire:click="deleteCart({{ $item->id }})"
                   wire:loading.attr="disabled">
-                  <x-heroicon-o-trash class="h-4 w-4 !text-danger-900" />
+                  <x-heroicon-o-trash class="h-5 w-5 !text-danger-900 lg:h-4 lg:w-4" />
                 </button>
                 <livewire:price-setting :cart-item="$item" key="{{ $item->id }}" />
               </div>
@@ -123,24 +123,24 @@
           @empty
             <div
               class="flex h-40 items-center justify-center rounded-lg border bg-white dark:border-gray-900 dark:bg-gray-900">
-              <x-heroicon-o-x-mark class="hidden h-10 w-10 text-gray-900 dark:text-white lg:block" />
-              <p class="text-xl text-gray-600 dark:text-white lg:text-3xl">{{ __('No item') }}</p>
+              <x-heroicon-o-x-mark class="h-8 w-8 text-gray-900 dark:text-white lg:h-10 lg:w-10" />
+              <p class="text-lg text-gray-600 dark:text-white lg:text-3xl">{{ __('No item') }}</p>
             </div>
           @endforelse
         </div>
         <div>
           <div
-            class="w-full rounded-lg border bg-white px-4 py-2 text-gray-600 dark:border-gray-900 dark:bg-gray-900 dark:text-white">
+            class="w-full rounded-lg border bg-white px-3 py-2 text-sm text-gray-600 dark:border-gray-900 dark:bg-gray-900 dark:text-white lg:px-4 lg:text-base">
             @include('filament.tenant.pages.cashier.detail')
           </div>
         </div>
         <div>
           <div
-            class="w-full rounded-lg border bg-white px-4 py-2 text-gray-600 dark:border-gray-900 dark:bg-gray-900 dark:text-white">
+            class="w-full rounded-lg border bg-white px-3 py-2 text-sm text-gray-600 dark:border-gray-900 dark:bg-gray-900 dark:text-white lg:px-4 lg:text-base">
             @include('filament.tenant.pages.cashier.total')
           </div>
         </div>
-        <button class="w-full rounded-lg bg-lakasir-primary px-2 py-4 text-white"
+        <button class="w-full rounded-lg bg-lakasir-primary px-4 py-3 text-base font-medium text-white lg:px-2 lg:py-4 lg:text-lg"
           x-on:mousedown="$dispatch('open-modal', {id: 'proceed-the-payment'})">{{ __('Proceed to payment') }}</button>
       </div>
     </div>
@@ -159,14 +159,14 @@
   </x-filament::modal>
   <x-filament::modal id="proceed-the-payment" width="5xl">
     <form wire:submit.prevent="proceedThePayment">
-      <div class="my-2 grid gap-x-4 md:grid-cols-2">
+      <div class="my-2 grid gap-4 md:grid-cols-2 md:gap-x-4">
         <div x-data="detail">
           <div class="rounded-lg">
-            <div class="mb-4 grid grid-cols-4 gap-1">
+            <div class="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-1">
               <template x-for="paymentMethod in paymentMethods">
                 <div
                   x-on:click="cartDetail['payment_method_id'] = paymentMethod.id; $wire.cartDetail['payment_method_id'] = paymentMethod.id;"
-                  class="flex cursor-pointer justify-center rounded-md border-none px-4 py-2 text-sm hover:scale-105 dark:text-white"
+                  class="flex cursor-pointer justify-center rounded-md border-none px-3 py-2 text-sm hover:scale-105 dark:text-white sm:px-4"
                   :class="cartDetail['payment_method_id'] == paymentMethod.id ? 'bg-lakasir-primary text-white' :
                       'dark:bg-gray-900 bg-gray-300 '"
                   x-text="paymentMethod.name.substring(0, 8)">
@@ -185,54 +185,54 @@
               @include('filament.tenant.pages.cashier.total')
             </div>
             @error('payed_money')
-              <span class="error text-danger-500">{{ $message }}</span>
+              <span class="error text-sm text-danger-500">{{ $message }}</span>
             @enderror
             <input id="display"
-              class="@error('payed_money') 'border-danger-500' @enderror w-full rounded-md border border-gray-300 bg-white p-2 text-right text-lg text-black dark:bg-gray-900 dark:text-white"
+              class="@error('payed_money') 'border-danger-500' @enderror w-full rounded-md border border-gray-300 bg-white p-3 text-right text-base text-black dark:bg-gray-900 dark:text-white lg:p-2 lg:text-lg"
               focus :disabled="isTouchScreen" x-mask:dynamic="$money($input)" x-on:keyup="changes" x-ref="payedMoney"
               inputMode="numeric">
-            <div class="mt-4 grid grid-cols-3 gap-4" id="calculator-button-shortcut">
+            <div class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 lg:mt-4" id="calculator-button-shortcut">
             </div>
-            <div class="mt-2 grid grid-cols-3 gap-2 lg:mt-2 lg:gap-2" id="calculator-button">
-              <button type="button" class="col-span-3 rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+            <div class="mt-2 grid grid-cols-3 gap-2" id="calculator-button">
+              <button type="button" class="col-span-3 rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append('no_changes')">{{ __('No change') }}</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(7)">7</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(8)">8</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(9)">9</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(4)">4</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(5)">5</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(6)">6</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(1)">1</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(2)">2</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(3)">3</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append('.')">.</button>
-              <button type="button" class="rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+              <button type="button" class="rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append(0)">0</button>
               <button type="button"
-                class="flex items-center justify-center rounded-md bg-gray-300 p-2 text-lg hover:bg-gray-400"
+                class="flex items-center justify-center rounded-md bg-gray-300 p-3 text-base hover:bg-gray-400 lg:p-2 lg:text-lg"
                 x-on:click="append('backspace')">
                 <x-filament::icon icon="heroicon-o-backspace" class="h-5 w-5 text-gray-500 dark:text-white" />
               </button>
               <div class="col-span-3 flex gap-x-2">
                 <button wire:loading.attr="disabled" type="submit"
-                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-lakasir-primary p-2 text-lg text-white hover:bg-[#ff6611]">
+                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-lakasir-primary p-3 text-base font-medium text-white hover:bg-[#ff6611] lg:p-2 lg:text-lg">
                   <div wire:loading>
                     <x-filament::loading-indicator class="h-5 w-5" />
                   </div>
                   {{ __('Pay it') }}
                 </button>
                 <button wire:click="dispatch('close-modal', {id: 'proceed-the-payment'});" type="button"
-                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-gray-300 p-2 text-lg">
+                  class="flex w-full items-center justify-center gap-x-2 rounded-md bg-gray-300 p-3 text-base font-medium lg:p-2 lg:text-lg">
                   {{ __('Close') }}
                 </button>
               </div>
@@ -252,15 +252,15 @@
   </x-filament::modal>
   <x-filament::modal id="success-modal" width="xl" :close-by-clicking-away="false" :close-by-escaping="false">
     <div class="flex flex-col items-center justify-center">
-      <x-heroicon-o-check-circle style="color: rgb(34 197 94); width: 200px" />
-      <p class="">@lang('Success')</p>
-      <p class="text-3xl font-bold">
+      <x-heroicon-o-check-circle class="h-32 w-32 lg:h-48 lg:w-48" style="color: rgb(34 197 94);" />
+      <p class="text-lg lg:text-xl">@lang('Success')</p>
+      <p class="text-2xl font-bold lg:text-3xl">
         @lang('Change'):
         <span id="changes"></span>
       </p>
     </div>
     <x-slot name="footer">
-      <div class="grid grid-cols-2 gap-x-2">
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-2">
         <x-filament::button icon="heroicon-m-printer" id="printReceiptButton">
           {{ __('Print') }}
         </x-filament::button>
@@ -271,10 +271,10 @@
     </x-slot>
   </x-filament::modal>
   <x-filament::modal id="modal-selected-table" width="xl" :close-by-clicking-away="false" :close-by-escaping="false">
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 md:gap-4">
       @foreach ($tableOption as $table)
         <div x-on:click="$wire.cartDetail['table_id'] = {{ $table->id }};"
-          class="flex cursor-pointer justify-center rounded-md border border-lakasir-primary px-4 py-2 text-sm hover:scale-105 dark:text-white"
+          class="flex cursor-pointer justify-center rounded-md border border-lakasir-primary px-4 py-3 text-sm hover:scale-105 dark:text-white md:py-2"
           :class="$wire.cartDetail['table_id'] == {{ $table->id }} ? 'bg-lakasir-primary text-white' : 'dark:bg-gray-900 '">
           {{ $table->number }}
         </div>
@@ -284,7 +284,7 @@
       <x-slot name="heading">
         <p id="titleEditDetail">{{ __('Choose the table') }}</p>
       </x-slot>
-      <div class="grid grid-cols-2 gap-x-2">
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-2">
         <x-filament::button id="saveSelectedTable"
           x-on:click="$dispatch('close-modal', {id: 'modal-selected-table'}); $wire.storeCart()">
           {{ __('Save') }}
